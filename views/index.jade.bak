@@ -1,0 +1,49 @@
+html
+  head
+    title=title
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous")
+    script( src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous")
+    script( src="https://cdn.jsdelivr.net/npm/vue")
+  block body
+    div.container
+      div.jumbotron
+        h1 solr client
+      form(method='get' id="search" action='/search')
+        div.form-group
+          label(for='q') Search:
+          input.form-control(type='text' id='q' name='q')
+          div.form-check
+            label.form-check-label(for='p') 
+            input.form-check-input(type='checkbox' id='p' name='p' value="Yes")
+            use PageRank
+          button.btn.btn-primary(type="submit") submit
+      ol.list-group#example-1
+        p(v-if="items") {{start + 1}} - {{start + size}} / {{all}}
+        li.list-group-item( v-for="(item, index) in items")
+          a(v-bind:href="item.og_url"){{index + 1}}. {{ item.title}}
+          p.text-sm-left.text-secondary{{item.id|idFilter}}
+
+    script.
+      example1 = new Vue({ el: '#example-1', data: {items:0, all:'',size:'',start:''}});
+      $(function() {
+        $("#search").submit(function(ev) {
+          ev.preventDefault();
+          $.ajax({
+            type: "GET",
+            url: window.location.pathname + 'search',
+            data: $('#search').serialize(),
+            success: function(da) {
+              console.log(da);
+              example1.$data.items = da.response.docs;
+              example1.$data.size = da.response.docs.length;
+              example1.$data.start = da.response.start;
+              example1.$data.all = da.response.numFound;
+            }
+      });
+      })})
+      Vue.filter('idFilter', function (value) {
+         if (!value) return ''
+         value = value.toString()
+         var v = value.split('/');
+         return v[v.length - 1]
+       })
