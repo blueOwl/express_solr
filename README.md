@@ -1,13 +1,14 @@
-#express_solr
-##Install
+# express_solr
+
+## Installation
 
 npm install
 
-##Configuration
+## Configuration
 
-set solr ip address, port and core name in Server.js
+set solr ip address, port and core name in `Server.js`
 
-##Running
+## Running
 nodejs Server.js 
 
 default running on port 3000 
