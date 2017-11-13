@@ -2,7 +2,9 @@
 
 ## Installation
 git clone https://github.com/blueOwl/express_solr
+
 cd express_solr/
+
 npm install
 
 ## Configuration
